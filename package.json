@@ -1,0 +1,22 @@
+{
+  "name": "vinted-backend",
+  "version": "1.0.0",
+  "description": "Vinted Backend Homework Assignment",
+  "main": "index.js",
+  "author": "Alina Diadickina",
+  "repository": {"url": "https://github.com/AlinaDiadickina/discount-calculator"},
+  "license": "MIT",
+  "scripts": {
+    "start": "yarn build && ts-node src/index.ts ",
+    "build": "tsc",
+    "test": "jest"
+  },
+  "devDependencies": {
+    "@types/jest": "^29.5.12",
+    "@types/node": "^7.0.5",
+    "jest": "^29.7.0",
+    "ts-jest": "^29.2.4",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.5.4"
+  }
+}
