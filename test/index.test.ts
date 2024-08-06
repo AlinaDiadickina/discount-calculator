@@ -15,7 +15,7 @@ import {
     SMALL_PACKAGE_DISCOUNTED_PRICE,
     MAXIMUM_MONTHLY_DISCOUNT,
     largeSizeFreeShipmentCount,
-    accumulatedTotalMonthlyDiscounts
+    accumulatedTotalMonthlyDiscounts,
 } from "../src/index";
 
 jest.mock("fs");
@@ -41,7 +41,7 @@ describe("processTransactionsFromFile", () => {
         (fs.createReadStream as jest.Mock).mockReturnValue(mockReadStream);
         (readline.createInterface as jest.Mock).mockReturnValue(mockInterface);
 
-        jest.spyOn(console, 'log').mockImplementation(() => { });
+        jest.spyOn(console, "log").mockImplementation(() => { });
     });
 
     afterEach(() => {
@@ -82,9 +82,9 @@ describe("processTransactionsFromFile", () => {
             return mockInterface;
         });
 
-        await processTransactionsFromFile("dummy_file.txt");
+        await processTransactionsFromFile("test_file.txt");
 
-        expect(fs.createReadStream).toHaveBeenCalledWith("dummy_file.txt");
+        expect(fs.createReadStream).toHaveBeenCalledWith("test_file.txt");
         expect(readline.createInterface).toHaveBeenCalledWith({
             input: mockReadStream,
             output: process.stdout,
@@ -92,7 +92,7 @@ describe("processTransactionsFromFile", () => {
         });
 
         invalidLines.forEach(line => {
-            expect(console.log).toHaveBeenCalledWith(`${line} Ignored`);
+            expect(console.log).toHaveBeenCalledWith("${line} Ignored");
         });
     });
 });
@@ -124,7 +124,6 @@ describe("processTransactions", () => {
         const lineDayThree = "2023-04-05 L LP";
         const lineDayFour = "2023-04-05 L LP";
         const lineDayFive = "2023-04-05 L LP";
-
 
         await processTransactions(lineDayThree, month, largeSize, carrier);
         await processTransactions(lineDayFour, month, largeSize, carrier);
@@ -193,8 +192,18 @@ describe("applyDiscount", () => {
     });
 
     it("Should apply large package discount", () => {
-        applyDiscount(DiscountType.ThirdLargeSize, PACKAGE_PRICING[Carrier.LP][PackageSize.L], totalDiscount, month);
-        applyDiscount(DiscountType.ThirdLargeSize, PACKAGE_PRICING[Carrier.LP][PackageSize.L], totalDiscount, month);
+        applyDiscount(
+            DiscountType.ThirdLargeSize,
+            PACKAGE_PRICING[Carrier.LP][PackageSize.L],
+            totalDiscount,
+            month
+        );
+        applyDiscount(
+            DiscountType.ThirdLargeSize,
+            PACKAGE_PRICING[Carrier.LP][PackageSize.L],
+            totalDiscount,
+            month
+        );
         const [newPrice, discount, updatedTotalDiscount] = applyDiscount(
             DiscountType.ThirdLargeSize,
             PACKAGE_PRICING[Carrier.LP][PackageSize.L],
@@ -204,7 +213,9 @@ describe("applyDiscount", () => {
 
         expect(newPrice).toBe(0);
         expect(discount).toBe(PACKAGE_PRICING[Carrier.LP][PackageSize.L]);
-        expect(updatedTotalDiscount).toBe(PACKAGE_PRICING[Carrier.LP][PackageSize.L]);
+        expect(updatedTotalDiscount).toBe(
+            PACKAGE_PRICING[Carrier.LP][PackageSize.L]
+        );
     });
 
     it("Should not apply discount when maximum monthly discount reached", () => {
@@ -228,6 +239,8 @@ describe("applyDiscount", () => {
             0
         );
 
-        expect(console.warn).toHaveBeenCalledWith(`Unknown discount type: ${fauxDiscountType}`);
+        expect(console.warn).toHaveBeenCalledWith(
+            "Unknown discount type: ${fauxDiscountType}"
+        );
     });
 });

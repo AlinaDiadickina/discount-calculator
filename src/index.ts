@@ -96,7 +96,7 @@ export async function processTransactionsFromFile(inputFile: string) {
             !PACKAGE_PRICING[carrier] ||
             !PACKAGE_PRICING[carrier][size]
         ) {
-            console.log(`${line} Ignored`);
+            console.log("${line} Ignored");
             return;
         }
         await processTransactions(line, month, size, carrier);
@@ -144,7 +144,7 @@ export async function processTransactions(line: string, month: string, size: str
         currentDiscount > 0 ? currentDiscount.toFixed(2) : "-";
 
     // Output results
-    console.log(`${line} ${originalPrice.toFixed(2)} ${discountDisplay}`);
+    console.log("${line} ${originalPrice.toFixed(2)} ${discountDisplay}");
 
 }
 
@@ -198,7 +198,7 @@ export function applyDiscount(
             break;
         // Catch other discount type errors
         default:
-            console.warn(`Unknown discount type: ${type}`);
+            console.warn("Unknown discount type: ${type}");
             break;
     }
 
@@ -207,7 +207,7 @@ export function applyDiscount(
 
 // Start processing transaction data
 if (require.main === module) {
-    processTransactionsFromFile("src/input.txt").catch((err) =>
+    processTransactionsFromFile("input/input.txt").catch((err) =>
         console.error(err)
     );
 }
