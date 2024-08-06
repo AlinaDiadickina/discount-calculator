@@ -11,7 +11,7 @@
   "scripts": {
     "start": "yarn build && ts-node src/index.ts ",
     "build": "tsc",
-    "test": "jest"
+    "test": "yarn build && jest"
   },
   "devDependencies": {
     "@types/jest": "^29.5.12",
