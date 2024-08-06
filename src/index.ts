@@ -9,18 +9,18 @@ import * as readline from "readline";
                      ENUMS
 ///////////////////////////////////////////////// */
 
-enum Carrier {
+export enum Carrier {
     LP = "LP",
     MR = "MR",
 }
 
-enum PackageSize {
+export enum PackageSize {
     S = "S",
     M = "M",
     L = "L",
 }
 
-enum DiscountType {
+export enum DiscountType {
     SmallPrice,
     ThirdLargeSize,
 }
@@ -30,7 +30,7 @@ enum DiscountType {
 ///////////////////////////////////////////////// */
 
 // All current PACKAGE_PRICING variations
-interface CarrierData {
+export interface CarrierData {
     [carrier: string]: {
         // carrier => "LP", "MR"
         [packageSize: string]: number; // packageSize => "S", "M", "L"
@@ -42,35 +42,35 @@ interface CarrierData {
 ///////////////////////////////////////////////// */
 
 // Carrier pricings
-const PACKAGE_PRICING: CarrierData = {
+export const PACKAGE_PRICING: CarrierData = {
     [Carrier.LP]: {
-        [PackageSize.S]: 1.5,
-        [PackageSize.M]: 4.9,
-        [PackageSize.L]: 6.9,
+        [PackageSize.S]: 1.50,
+        [PackageSize.M]: 4.90,
+        [PackageSize.L]: 6.90,
     },
     [Carrier.MR]: { [PackageSize.S]: 2, [PackageSize.M]: 3, [PackageSize.L]: 4 },
 };
 
 // Smallest package price with applied discount
-const SMALL_PACKAGE_DISCOUNTED_PRICE: number = Math.min(
+export const SMALL_PACKAGE_DISCOUNTED_PRICE: number = Math.min(
     PACKAGE_PRICING[Carrier.LP][PackageSize.S],
     PACKAGE_PRICING[Carrier.MR][PackageSize.S]
 );
 // Current smallest package discount
-const SMALL_PACKAGE_DISCOUNT: number = findSmallPackageDiscount(
+export const SMALL_PACKAGE_DISCOUNT: number = findSmallPackageDiscount(
     PACKAGE_PRICING[Carrier.LP][PackageSize.S],
     PACKAGE_PRICING[Carrier.MR][PackageSize.S]
 );
-const MAXIMUM_MONTHLY_DISCOUNT: number = 10;
+export const MAXIMUM_MONTHLY_DISCOUNT: number = 10;
 
 /* /////////////////////////////////////////////////
                     VARIABLES
 ///////////////////////////////////////////////// */
 
 // Large sized packages shipment count by month
-let largeSizeFreeShipmentCount: { [month: string]: number } = {};
+export let largeSizeFreeShipmentCount: { [month: string]: number } = {};
 // Monthly discount accumulation by month
-let accumulatedTotalMonthlyDiscounts: { [month: string]: number } = {};
+export let accumulatedTotalMonthlyDiscounts: { [month: string]: number } = {};
 
 /* /////////////////////////////////////////////////
                     FUNCTIONS
@@ -83,9 +83,8 @@ export async function processTransactionsFromFile(inputFile: string) {
         output: process.stdout,
         terminal: false,
     });
-
     // For each line read and process data
-    rl.on("line", (line: string) => {
+    rl.on("line", async (line: string) => {
         const [date, size, carrier] = line.split(" ");
         const month = date.slice(0, 7);
 
@@ -100,49 +99,53 @@ export async function processTransactionsFromFile(inputFile: string) {
             console.log(`${line} Ignored`);
             return;
         }
-
-        // Initialize discount accumulation
-        if (!accumulatedTotalMonthlyDiscounts[month]) {
-            accumulatedTotalMonthlyDiscounts[month] = 0;
-        }
-
-        // Find original price by carrier and size
-        let originalPrice: number = PACKAGE_PRICING[carrier][size];
-        let currentDiscount: number = 0;
-
-        if (size === PackageSize.S) {
-            // Meet S size discount requirement
-            [
-                originalPrice,
-                currentDiscount,
-                accumulatedTotalMonthlyDiscounts[month],
-            ] = applyDiscount(
-                DiscountType.SmallPrice,
-                originalPrice,
-                accumulatedTotalMonthlyDiscounts[month]
-            );
-
-        } else if (size === PackageSize.L && carrier === Carrier.LP) {
-            // Meet L size discount requirement
-            [
-                originalPrice,
-                currentDiscount,
-                accumulatedTotalMonthlyDiscounts[month],
-            ] = applyDiscount(
-                DiscountType.ThirdLargeSize,
-                originalPrice,
-                accumulatedTotalMonthlyDiscounts[month],
-                month
-            );
-        }
-
-        // Format data for display
-        const discountDisplay =
-            currentDiscount > 0 ? currentDiscount.toFixed(2) : "-";
-
-        // Output results
-        console.log(`${line} ${originalPrice.toFixed(2)} ${discountDisplay}`);
+        await processTransactions(line, month, size, carrier);
     });
+}
+
+export async function processTransactions(line: string, month: string, size: string, carrier: string) {
+    // Initialize discount accumulation
+    if (!accumulatedTotalMonthlyDiscounts[month]) {
+        accumulatedTotalMonthlyDiscounts[month] = 0;
+    }
+
+    // Find original price by carrier and size
+    let originalPrice: number = PACKAGE_PRICING[carrier][size];
+    let currentDiscount: number = 0;
+
+    if (size === PackageSize.S) {
+        // Meet S size discount requirement
+        [
+            originalPrice,
+            currentDiscount,
+            accumulatedTotalMonthlyDiscounts[month],
+        ] = applyDiscount(
+            DiscountType.SmallPrice,
+            originalPrice,
+            accumulatedTotalMonthlyDiscounts[month]
+        );
+
+    } else if (size === PackageSize.L && carrier === Carrier.LP) {
+        // Meet L size discount requirement
+        [
+            originalPrice,
+            currentDiscount,
+            accumulatedTotalMonthlyDiscounts[month],
+        ] = applyDiscount(
+            DiscountType.ThirdLargeSize,
+            originalPrice,
+            accumulatedTotalMonthlyDiscounts[month],
+            month
+        );
+    }
+
+    // Format data for display
+    const discountDisplay =
+        currentDiscount > 0 ? currentDiscount.toFixed(2) : "-";
+
+    // Output results
+    console.log(`${line} ${originalPrice.toFixed(2)} ${discountDisplay}`);
+
 }
 
 export function findSmallPackageDiscount(

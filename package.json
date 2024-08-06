@@ -4,7 +4,9 @@
   "description": "Vinted Backend Homework Assignment",
   "main": "index.js",
   "author": "Alina Diadickina",
-  "repository": {"url": "https://github.com/AlinaDiadickina/discount-calculator"},
+  "repository": {
+    "url": "https://github.com/AlinaDiadickina/discount-calculator"
+  },
   "license": "MIT",
   "scripts": {
     "start": "yarn build && ts-node src/index.ts ",
