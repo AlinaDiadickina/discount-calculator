@@ -26,11 +26,7 @@ jest.mock("readline");
 ///////////////////////////////////////////////// */
 
 describe("processTransactionsFromFile", () => {
-    const validLines = [
-        "2023-08-06 S LP",
-        "2023-08-06 L LP",
-        "2023-08-06 M MR"
-    ];
+    const validLines = ["2023-08-06 S LP", "2023-08-06 L LP", "2023-08-06 M MR"];
     let mockReadStream: any;
     let mockInterface: any;
 
@@ -74,7 +70,7 @@ describe("processTransactionsFromFile", () => {
             "2023-08-06 X LP",
             "2023-08-06 S XY",
             "2023-08-06 S",
-            "S LP"
+            "S LP",
         ];
         (mockInterface.on as jest.Mock).mockImplementation((event, callback) => {
             if (event === "line") invalidLines.forEach(callback);
@@ -91,8 +87,8 @@ describe("processTransactionsFromFile", () => {
             terminal: false,
         });
 
-        invalidLines.forEach(line => {
-            expect(console.log).toHaveBeenCalledWith("${line} Ignored");
+        invalidLines.forEach((line) => {
+            expect(console.log).toHaveBeenCalledWith(`${line} Ignored`);
         });
     });
 });

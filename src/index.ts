@@ -96,7 +96,7 @@ export async function processTransactionsFromFile(inputFile: string) {
             !PACKAGE_PRICING[carrier] ||
             !PACKAGE_PRICING[carrier][size]
         ) {
-            console.log("${line} Ignored");
+            console.log(`${line} Ignored`);
             return;
         }
         await processTransactions(line, month, size, carrier);
@@ -198,7 +198,7 @@ export function applyDiscount(
             break;
         // Catch other discount type errors
         default:
-            console.warn("Unknown discount type: ${type}");
+            console.warn(`Unknown discount type: ${type}`);
             break;
     }
 
