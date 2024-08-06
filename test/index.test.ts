@@ -44,7 +44,7 @@ describe("processTransactionsFromFile", () => {
         jest.restoreAllMocks();
     });
 
-    it("should process transactions and return results", async () => {
+    it("Should process transactions and return results", async () => {
         (mockInterface.on as jest.Mock).mockImplementation((event, callback) => {
             if (event === "line") validLines.forEach(callback);
             if (event === "close") callback();
@@ -65,7 +65,7 @@ describe("processTransactionsFromFile", () => {
         expect(console.log).toHaveBeenCalledWith("2023-08-06 M MR 3.00 -");
     });
 
-    it("should log ignored lines due to invalid data", async () => {
+    it("Should log ignored lines", async () => {
         const invalidLines = [
             "2023-08-06 X LP",
             "2023-08-06 S XY",
