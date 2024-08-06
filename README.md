@@ -9,11 +9,6 @@ In order to set up all the packages for this project, run:
 yarn
 ```
 
-To build the code run:
-```bash
-yarn build
-```
-
 To start the discount calculator run:
 ```bash
 yarn start
