@@ -144,7 +144,7 @@ export async function processTransactions(line: string, month: string, size: str
         currentDiscount > 0 ? currentDiscount.toFixed(2) : "-";
 
     // Output results
-    console.log("${line} ${originalPrice.toFixed(2)} ${discountDisplay}");
+    console.log(`${line} ${originalPrice.toFixed(2)} ${discountDisplay}`);
 
 }
 
