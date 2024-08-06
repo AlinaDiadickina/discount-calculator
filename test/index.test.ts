@@ -240,7 +240,7 @@ describe("applyDiscount", () => {
         );
 
         expect(console.warn).toHaveBeenCalledWith(
-            "Unknown discount type: ${fauxDiscountType}"
+            `Unknown discount type: ${fauxDiscountType}`
         );
     });
 });
